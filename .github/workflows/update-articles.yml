@@ -1,4 +1,4 @@
-name: 每日抓取灵活用工资讯
+name: Daily Flexjob Crawler
 
 on:
   schedule:
@@ -8,41 +8,31 @@ on:
 jobs:
   crawl:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout 代码
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 设置 Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: 安装依赖
-        run: npm install --legacy-peer-deps
+      - run: npm install --legacy-peer-deps
 
-      - name: 运行爬虫脚本
-        run: node scripts/crawler.js
-        # 注意: 实际使用时需要实现真实的爬取逻辑
+      - run: node scripts/crawler.js
 
-      - name: 提交更新
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: '更新文章数据'
+          commit_message: 'Update articles data'
           file_pattern: 'src/data/articles.ts'
 
   deploy:
     needs: crawl
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+      - uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
