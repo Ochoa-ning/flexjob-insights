@@ -8,10 +8,12 @@ on:
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@0c4c9a0b3ef8cc5b8a0a3f0c0a7d8a7c8a0a3f0c
         with:
           node-version: '20'
           cache: 'npm'
@@ -20,7 +22,7 @@ jobs:
 
       - run: node scripts/crawler.js
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@5d79bdd8ba2677d52da9a5bea1f3d9d8a35e8a0c
         with:
           commit_message: 'Update articles data'
           file_pattern: 'src/data/articles.ts'
@@ -30,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae1
 
-      - uses: amondnet/vercel-action@v25
+      - uses: amondnet/vercel-action@25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
